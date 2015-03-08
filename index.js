@@ -17,8 +17,8 @@ module.exports = function() {
     });
   };
   
-  this.run = function(type, evt, cb) {
-    createPipeline(this.hooks[type][evt]).run(cb);
+  this.prototype.run = function(type, evt, cb) {
+    createPipeline(this.model.hooks[type][evt]).run(this, cb);
   };
   
   function createPipeline(fns) {

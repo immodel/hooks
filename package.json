@@ -26,6 +26,7 @@
     "ware": "^1.2.0"
   },
   "devDependencies": {
-    "mocha": "^2.2.0"
+    "mocha": "^2.2.0",
+    "sinon": "^1.13.0"
   }
 }
