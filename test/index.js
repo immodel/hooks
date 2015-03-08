@@ -1,8 +1,8 @@
 var assert = require('assert');
 var sinon = require('sinon');
 var model = require('immodel')
-  .use(require('..'));
-  
+  .use(require('immodel-base'), {hooks: require('..')});
+
 describe('hooks', function() {
   it('should work', function(done) {
     function stub(model, next) {
@@ -10,7 +10,7 @@ describe('hooks', function() {
     }
     var preSpy = sinon.spy(stub);
     var postSpy = sinon.spy(stub);
-    
+
     var tmp = model.use(function() {
       this.prototype.test = function(cb) {
         var self = this;
@@ -21,7 +21,7 @@ describe('hooks', function() {
         });
       };
     });
-    
+
     tmp = tmp
       .pre('test', preSpy)
       .post('test', postSpy);
@@ -32,6 +32,5 @@ describe('hooks', function() {
       assert(postSpy.calledOnce);
       done();
     });
-    
   });
 });

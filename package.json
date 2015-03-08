@@ -8,19 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/immodel/hooks"
+    "url": "immodel/hooks"
   },
   "keywords": [
     "hooks",
-    "immodel",
-    "immodel",
-    "hooks"
+    "immodel"
   ],
   "author": "ashaffer (http://github.com/ashaffer)",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/immodel/hooks/issues"
-  },
   "homepage": "https://github.com/immodel/hooks",
   "dependencies": {
     "ware": "^1.2.0"
