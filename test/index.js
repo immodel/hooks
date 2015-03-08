@@ -8,9 +8,9 @@ describe('hooks', function() {
     var spy = sinon.spy(function(model, next) { setTimeout(next); });
 
     var tmp = model.method('test', function(cb) {
-      this.run('pre:test', cb);
+      this.run('test', cb);
     })
-    .hook('pre:test', spy);
+    .hook('test', spy);
 
     var doc = new tmp();
     doc.test(function() {
@@ -32,10 +32,10 @@ describe('hooks', function() {
       .attr('name', model
         .attr('givenName', 'string')
         .attr('familyName', 'string')
-        .hook('pre:save', spy));
+        .hook('save', spy));
 
     var user = new User({name: {givenName: 'test', familyName: 'user'}});
-    user.runRecursively('pre:save', function() {
+    user.runRecursively('save', function() {
       assert(spy.calledOnce);
       assert(spy.calledWith(user.get('name')));
       done();
