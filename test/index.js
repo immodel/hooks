@@ -23,6 +23,12 @@ describe('hooks', function() {
     var spy = sinon.spy(function(model, next) { setTimeout(next); });
 
     var User = model
+      // Have one complex property that doesn't have
+      // any hooks to ensure that that doesn't block
+      // the run
+      .attr('groups', model
+        .attr('id', 'string')
+        .attr('name', 'string'))
       .attr('name', model
         .attr('givenName', 'string')
         .attr('familyName', 'string')
