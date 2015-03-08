@@ -5,31 +5,33 @@ var model = require('immodel')
 
 describe('hooks', function() {
   it('should work', function(done) {
-    function stub(model, next) {
-      setTimeout(next);
-    }
-    var preSpy = sinon.spy(stub);
-    var postSpy = sinon.spy(stub);
+    var spy = sinon.spy(function(model, next) { setTimeout(next); });
 
-    var tmp = model.use(function() {
-      this.prototype.test = function(cb) {
-        var self = this;
-        this.run('pre', 'test', function() {
-          setTimeout(function() {
-            self.run('post', 'test', cb);
-          });
-        });
-      };
-    });
-
-    tmp = tmp
-      .pre('test', preSpy)
-      .post('test', postSpy);
+    var tmp = model.method('test', function(cb) {
+      this.run('pre:test', cb);
+    })
+    .hook('pre:test', spy);
 
     var doc = new tmp();
     doc.test(function() {
-      assert(preSpy.calledOnce);
-      assert(postSpy.calledOnce);
+      assert(spy.calledOnce);
+      done();
+    });
+  });
+
+  it('should work recursively', function(done) {
+    var spy = sinon.spy(function(model, next) { setTimeout(next); });
+
+    var User = model
+      .attr('name', model
+        .attr('givenName', 'string')
+        .attr('familyName', 'string')
+        .hook('pre:save', spy));
+
+    var user = new User({name: {givenName: 'test', familyName: 'user'}});
+    user.runRecursively('pre:save', function() {
+      assert(spy.calledOnce);
+      assert(spy.calledWith(user.get('name')));
       done();
     });
   });

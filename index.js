@@ -1,36 +1,34 @@
 var ware = require('ware');
 
 module.exports = function() {
-  this.hooks = {pre: {}, post: {}};
+  this.hooks = {};
 
-  this.pre = function(evt, fn) {
+  this.hook = function(name, fn) {
+    name = '$' + name;
     return this.use(function() {
-      this.hooks.pre[evt] = this.hooks.pre[evt] || [];
-      this.hooks.pre[evt].push(fn);
+      this.hooks[name] = this.hooks[name] || [];
+      this.hooks[name].push(fn);
     });
   };
 
-  this.post = function(evt, fn) {
-    return this.use(function() {
-      this.hooks.post[evt] = this.hooks.post[evt] || [];
-      this.hooks.post[evt].push(fn);
-    });
+  this.prototype.run = function(name, cb) {
+    name = '$' + name;
+    createPipeline(this.model.hooks[name]).run(this, cb);
   };
 
-  this.prototype.run = function(evtType, evt, cb) {
-    createPipeline(this.model.hooks[evtType][evt]).run(this, cb);
-  };
-
-  this.prototype.runRecursively = function(evtType, evt, cb) {
+  this.prototype.runRecursively = function(name, cb) {
     var self = this;
-    this.eachAttrAsync(function(name, type, next) {
+    this.model.eachAttrAsync(function(attr, type, next) {
       // Sorry, no hooks on leaf attributes for now.
       // Maybe soon.
       if(! type.complex)
         return next();
 
-      self.get(runRecursively(self.get(name), evt, next);
-    }, cb);
+      self.get(attr).runRecursively(name, next);
+    }, function(err) {
+      if(err) return cb(err);
+      self.run(name, cb);
+    });
   };
 
   function createPipeline(fns) {

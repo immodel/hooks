@@ -21,6 +21,7 @@
     "ware": "^1.2.0"
   },
   "devDependencies": {
+    "immodel-base": "immodel/base",
     "mocha": "^2.2.0",
     "sinon": "^1.13.0"
   }
