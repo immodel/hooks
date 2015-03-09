@@ -19,11 +19,6 @@ module.exports = function() {
   this.prototype.runRecursively = function(name, cb) {
     var self = this;
     this.eachAttrAsync(function(attr, type, next) {
-      // Sorry, no hooks on leaf attributes for now.
-      // Maybe soon.
-      if(! type.complex)
-        return next();
-
       self.get(attr).runRecursively(name, next);
     }, function(err) {
       if(err) return cb(err);
